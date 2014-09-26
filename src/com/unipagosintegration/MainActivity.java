@@ -1,29 +1,20 @@
 package com.unipagosintegration;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -43,7 +34,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	 * as a master/detail two-pane view on tablets. When true, a single pane is
 	 * shown on tablets.
 	 */
-	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 	private EditText referenceEditText;
 	private EditText refTextEditText;
 	private EditText amountEditText;
@@ -67,51 +57,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		button = (Button)findViewById(R.id.button1);
 		button.setOnClickListener(this);
+		
+		TextView responseTextView = (TextView)findViewById(R.id.textView1);
+		if (getIntent().getAction().equals(Intent.ACTION_VIEW)) {
+			Uri uri = getIntent().getData();	        	  	        	  
+      	  	Log.w("Splash Activity", "Path: " + uri.getPath() + " Host: " + uri.getHost());
+      	  	Set<String> parameters = uri.getQueryParameterNames();
+      	  	StringBuilder builder = new StringBuilder();
+      	  	for (String parameter : parameters) {
+      	  		builder.append(parameter).append(": ").append(uri.getQueryParameter(parameter)).append("\n");
+      	  	}
+      	  	responseTextView.setText(builder.toString());
+		} else {
+			responseTextView.setVisibility(View.INVISIBLE);
+		}
 	}
 	
-	
-//	/**
-//	 * Shows the simplified settings UI if the device configuration if the
-//	 * device configuration dictates that a simplified, single-pane UI should be
-//	 * shown.
-//	 */
-//	private void setupSimplePreferencesScreen() {
-//		if (!isSimplePreferences(this)) {
-//			return;
-//		}
-//
-//		// In the simplified UI, fragments are not used at all and we instead
-//		// use the older PreferenceActivity APIs.
-//
-//		// Add 'general' preferences.
-//		addPreferencesFromResource(R.xml.pref_general);
-//
-//		// Add 'notifications' preferences, and a corresponding header.
-//		PreferenceCategory fakeHeader = new PreferenceCategory(this);
-//		fakeHeader.setTitle(R.string.pref_header_notifications);
-//		getPreferenceScreen().addPreference(fakeHeader);
-//		addPreferencesFromResource(R.xml.pref_notification);
-//
-//		// Add 'data and sync' preferences, and a corresponding header.
-//		fakeHeader = new PreferenceCategory(this);
-//		fakeHeader.setTitle(R.string.pref_header_data_sync);
-//		getPreferenceScreen().addPreference(fakeHeader);
-//		addPreferencesFromResource(R.xml.pref_data_sync);
-//
-//		// Bind the summaries of EditText/List/Dialog/Ringtone preferences to
-//		// their values. When their values change, their summaries are updated
-//		// to reflect the new value, per the Android Design guidelines.
-//		bindPreferenceSummaryToValue(findPreference("example_text"));
-//		bindPreferenceSummaryToValue(findPreference("example_list"));
-//		bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-//		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
-//	}
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	public boolean onIsMultiPane() {
-//		return isXLargeTablet(this) && !isSimplePreferences(this);
-//	}
 
 	/**
 	 * Helper method to determine if the device has an extra-large screen. For
